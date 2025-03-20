@@ -6,7 +6,7 @@ import Link from "next/link";
 import { BookOpen, BookMarkedIcon } from "lucide-react";
 import { SignedIn, SignedOut, SignInButton, UserButton } from "@clerk/nextjs";
 import { Button } from "./ui/button";
-import SearchInput from "./SearchInput";
+import { SearchInput } from "./SearchInput";
 
 const Header = () => {
   return (

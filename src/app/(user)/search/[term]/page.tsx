@@ -1,7 +1,6 @@
 import { Search } from "lucide-react";
 import { CourseCard } from "@/components/CourseCard";
 import { searchCourses } from "@/sanity/lib/courses/searchCourses";
-import { redirect } from "next/navigation";
 
 interface SearchPageProps {
   params: Promise<{
@@ -11,7 +10,6 @@ interface SearchPageProps {
 
 export default async function SearchPage({ params }: SearchPageProps) {
   const { term } = await params;
-
   const decodedTerm = decodeURIComponent(term);
   const courses = await searchCourses(decodedTerm);
 
