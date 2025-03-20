@@ -9,7 +9,7 @@ import { CourseProgress } from "@/components/CourseProgress";
 import {
   GetCoursesQueryResult,
   GetEnrolledCoursesQueryResult,
-} from "@/sanity.types";
+} from "../../sanity.types";
 
 interface CourseCardProps {
   course:
