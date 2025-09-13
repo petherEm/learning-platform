@@ -41,6 +41,19 @@ export const lessonCompletionType = defineType({
       type: "datetime",
       validation: (rule) => rule.required(),
     }),
+    defineField({
+      name: "isActive",
+      title: "Is Active",
+      type: "boolean",
+      description: "Whether this completion record is active",
+      initialValue: true,
+    }),
+    defineField({
+      name: "uncompletedAt",
+      title: "Uncompleted At",
+      type: "datetime",
+      description: "When the lesson was marked as incomplete",
+    }),
   ],
   preview: {
     select: {

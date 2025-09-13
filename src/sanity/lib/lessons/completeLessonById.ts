@@ -20,13 +20,26 @@ export async function completeLessonById({
 
     const studentId = student._id;
 
-    // Check if lesson is already completed
+    // Check if lesson completion exists (active or inactive)
     const existingCompletion = await sanityFetch({
       query: groq`*[_type == "lessonCompletion" && student._ref == $studentId && lesson._ref == $lessonId][0]`,
       params: { studentId, lessonId },
     });
 
     if (existingCompletion.data) {
+      // If completion exists but is inactive, reactivate it
+      if (!existingCompletion.data.isActive) {
+        const reactivated = await client
+          .patch(existingCompletion.data._id)
+          .set({ 
+            isActive: true,
+            completedAt: new Date().toISOString(),
+            uncompletedAt: null
+          })
+          .commit();
+        return reactivated;
+      }
+      // If already active, return existing
       return existingCompletion.data;
     }
 
@@ -66,6 +79,7 @@ export async function completeLessonById({
         _ref: lesson.data.module.course,
       },
       completedAt: new Date().toISOString(),
+      isActive: true,
     });
 
     return completion;

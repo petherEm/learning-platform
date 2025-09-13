@@ -38,23 +38,43 @@ export function LessonCompleteButton({
   const handleToggle = async () => {
     try {
       setIsPending(true);
+      let result;
+      
+      console.log(`${isCompleted ? 'Uncompleting' : 'Completing'} lesson:`, { lessonId, clerkId });
+      
       if (isCompleted) {
-        await uncompleteLessonAction(lessonId, clerkId);
+        result = await uncompleteLessonAction(lessonId, clerkId);
       } else {
-        await completeLessonAction(lessonId, clerkId);
+        result = await completeLessonAction(lessonId, clerkId);
       }
 
+      console.log("Action result:", result);
+
+      // Check if the action was successful
+      if (result && result.success === false) {
+        console.error("Action failed:", result.error);
+        throw new Error(result.error || "Action failed");
+      }
+
+      // Refresh the completion status
       startTransition(async () => {
-        const newStatus = await getLessonCompletionStatusAction(
-          lessonId,
-          clerkId
-        );
-        setIsCompleted(newStatus);
+        try {
+          const newStatus = await getLessonCompletionStatusAction(
+            lessonId,
+            clerkId
+          );
+          console.log("New completion status:", newStatus);
+          setIsCompleted(newStatus);
+        } catch (error) {
+          console.error("Error fetching new status:", error);
+        }
       });
 
       router.refresh();
     } catch (error) {
       console.error("Error toggling lesson completion:", error);
+      // Reset the state to previous value on error
+      setIsCompleted(prevState => prevState);
     } finally {
       setIsPending(false);
     }

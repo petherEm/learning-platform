@@ -99,6 +99,8 @@ export type LessonCompletion = {
     [internalGroqTypeReferenceTo]?: "course";
   };
   completedAt?: string;
+  isActive?: boolean;
+  uncompletedAt?: string;
 };
 
 export type Enrollment = {
@@ -604,6 +606,8 @@ export type ProgressQueryResult = {
       [internalGroqTypeReferenceTo]?: "course";
     };
     completedAt?: string;
+    isActive?: boolean;
+    uncompletedAt?: string;
   }>;
   course: {
     _id: string;
@@ -877,6 +881,8 @@ export type GetCompletionsQueryResult = {
       [internalGroqTypeReferenceTo]?: "course";
     };
     completedAt?: string;
+    isActive?: boolean;
+    uncompletedAt?: string;
   }>;
   course: {
     _id: string;
@@ -989,7 +995,7 @@ export type GetLessonByIdQueryResult = {
 
 // Source: src/sanity/lib/lessons/getLessonCompletionStatus.ts
 // Variable: completionStatusQuery
-// Query: *[_type == "lessonCompletion" && student._ref == $studentId && lesson._ref == $lessonId][0] {    ...  }
+// Query: *[_type == "lessonCompletion" && student._ref == $studentId && lesson._ref == $lessonId && isActive == true][0] {    ...  }
 export type CompletionStatusQueryResult = {
   _id: string;
   _type: "lessonCompletion";
@@ -1021,6 +1027,8 @@ export type CompletionStatusQueryResult = {
     [internalGroqTypeReferenceTo]?: "course";
   };
   completedAt?: string;
+  isActive?: boolean;
+  uncompletedAt?: string;
 } | null;
 
 // Source: src/sanity/lib/student/getEnrolledCourses.ts
@@ -1161,7 +1169,7 @@ declare module "@sanity/client" {
     "\n    *[_type == \"course\"] {\n        ...,\n        \"slug\": slug.current,\n        \"category\": category->{...},\n        \"instructor\": instructor->{...}\n    }\n  ": GetCoursesQueryResult;
     "*[_type == \"course\" && (\n    title match $term + \"*\" ||\n    description match $term + \"*\" ||\n    category->name match $term + \"*\"\n  )] {\n    ...,\n    \"slug\": slug.current,\n    \"category\": category->{...},\n    \"instructor\": instructor->{...}\n  }": SearchQueryResult;
     "*[_type == \"lesson\" && _id == $id][0] {\n    ...,\n    \"module\": module->{\n      ...,\n      \"course\": course->{...}\n    }\n  }": GetLessonByIdQueryResult;
-    "*[_type == \"lessonCompletion\" && student._ref == $studentId && lesson._ref == $lessonId][0] {\n    ...\n  }": CompletionStatusQueryResult;
+    "*[_type == \"lessonCompletion\" && student._ref == $studentId && lesson._ref == $lessonId && isActive == true][0] {\n    ...\n  }": CompletionStatusQueryResult;
     "*[_type == \"student\" && clerkId == $clerkId][0] {\n    \"enrolledCourses\": *[_type == \"enrollment\" && student._ref == ^._id] {\n      ...,\n      \"course\": course-> {\n        ...,\n        \"slug\": slug.current,\n        \"category\": category->{...},\n        \"instructor\": instructor->{...}\n      }\n    }\n  }": GetEnrolledCoursesQueryResult;
     "\n    *[_type == \"student\" && clerkId == $clerkId][0]\n  ": GetStudentByClerkIdQueryResult;
     "*[_type == \"student\" && clerkId == $clerkId][0]._id": StudentQueryResult;

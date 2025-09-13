@@ -14,7 +14,7 @@ export async function getLessonCompletionStatus(
   }
 
   const completionStatusQuery =
-    defineQuery(`*[_type == "lessonCompletion" && student._ref == $studentId && lesson._ref == $lessonId][0] {
+    defineQuery(`*[_type == "lessonCompletion" && student._ref == $studentId && lesson._ref == $lessonId && isActive == true][0] {
     ...
   }`);
 

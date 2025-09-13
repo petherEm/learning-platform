@@ -1,6 +1,4 @@
 "use client";
-
-import React from "react";
 import DarkModeToggle from "./DarkModeToggle";
 import Link from "next/link";
 import { BookOpen, BookMarkedIcon } from "lucide-react";
@@ -19,8 +17,11 @@ const Header = () => {
               href="/"
               className="flex items-center space-x-2 hover:opacity-90 transition-opacity"
             >
-              <BookOpen className="h-6 w-6  text-violet-400" />
-              <span className="font-bold text-2xl text-amber-400">Vergify</span>
+              <BookOpen className="h-6 w-6 text-emerald-400" />
+              <span className="font-bold text-2xl text-emerald-400">
+                <span className="md:hidden">RB</span>
+                <span className="hidden md:inline">RapidBrain</span>
+              </span>
             </Link>
 
             <SearchInput />

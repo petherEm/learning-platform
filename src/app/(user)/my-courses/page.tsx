@@ -15,9 +15,19 @@ export default async function MyCoursesPage() {
 
   const enrolledCourses = await getEnrolledCourses(user.id);
 
-  // Get progress for each enrolled course
+  // Deduplicate courses by course._id and get progress for each unique course
+  const uniqueCourses = enrolledCourses.reduce((acc, enrollment) => {
+    if (!enrollment.course) return acc;
+    
+    // Use course._id as key to prevent duplicates
+    if (!acc.some(item => item.course?._id === enrollment.course?._id)) {
+      acc.push(enrollment);
+    }
+    return acc;
+  }, [] as typeof enrolledCourses);
+
   const coursesWithProgress = await Promise.all(
-    enrolledCourses.map(async ({ course }) => {
+    uniqueCourses.map(async ({ course }) => {
       if (!course) return null;
       const progress = await getCourseProgress(user.id, course._id);
       return {
@@ -35,7 +45,7 @@ export default async function MyCoursesPage() {
           <h1 className="text-3xl font-bold">My Courses</h1>
         </div>
 
-        {enrolledCourses.length === 0 ? (
+        {uniqueCourses.length === 0 ? (
           <div className="text-center py-12">
             <h2 className="text-2xl font-semibold mb-4">No courses yet</h2>
             <p className="text-muted-foreground mb-8">

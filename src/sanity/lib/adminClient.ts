@@ -6,6 +6,10 @@ export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true, // Set to false if statically generating pages, using ISR or tag-based revalidation
-  token: process.env.SANITY_API_ADMIN_TOKEN,
+  useCdn: false, // Set to false for write operations and real-time data
+  token: process.env.EDITOR_TOKEN || process.env.SANITY_API_ADMIN_TOKEN,
 })
+
+if (!process.env.EDITOR_TOKEN && !process.env.SANITY_API_ADMIN_TOKEN) {
+  console.error('Warning: Neither EDITOR_TOKEN nor SANITY_API_ADMIN_TOKEN is set. Write operations will fail.')
+}
